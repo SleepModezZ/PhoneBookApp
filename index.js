@@ -10,18 +10,8 @@ app.use(express.json())
 app.use(cors())
 
 
-// Tehtävän 3.7 ratkaisu:
-// app.use(morgan('tiny'))
-
-
-// En onnistunut yhdistämään tokeneita esimääritellyn muotoilun kanssa, joten ratkaisin
-// tehtävän 3.8 korvaamalla tinyn sen määrittävillä valmiilla tokeneilla ja
-// listäämällä niiden perään itse määrittelemäni tokenin tulostamaan pyynnön sisällön:
 morgan.token('req-body', function (req) {
   const result = JSON.stringify(req.body)
-  // Tyhjät aaltosulkeet muiden kuin POST-pyyntöjen kohdalla näyttää huonolta, joten
-  // lähetän niiden sijaan tyhjän merkkijonon (null tai undefined kävisivät yhtälailla).
-  // Valitettavasti morgan kuitenkin näyttää kaikkien thyjien tietojen kohdalla väliviivan.
   if (result === '{}') {
     return ''
   }
@@ -36,6 +26,10 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :r
 
 app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>')
+})
+
+app.get('/health', (req, res) => {
+  res.send('ok')
 })
 
 
