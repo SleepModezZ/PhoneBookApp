@@ -22,6 +22,8 @@ jobs:
         run: cd frontend && npm run test
       - name: Build
         run: npm run build:ui
+      - name: Clean up
+        run: rm -r ./frontend/build && rm -r ./frontend/node_modules && rm -r ./node_modules
       - uses: JorgeLNJunior/render-deploy@v1.3.2
         with:
           service_id: ${{ secrets.RENDER_SERVICE_ID }} # required
