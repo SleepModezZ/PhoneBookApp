@@ -20,3 +20,5 @@ jobs:
         run: npm run lint
       - name: Frontend test
         run: cd frontend && npm run test
+      - name: Build
+        run: npm run build:ui
