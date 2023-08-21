@@ -4,10 +4,13 @@ on:
   push:
     branches:
       - master
-      # note that your "main" branch might be called main instead of master
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize]
+
 
 jobs:
-  simple_deployment_pipeline:
+  simple_testing_pipeline:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -20,6 +23,17 @@ jobs:
         run: npm run lint
       - name: Frontend test
         run: cd frontend && npm run test
+  deploy_to_render:
+    if: ${{ github.event_name == 'push'  && !contains(join(toJson(github.event.commits.*.message)), '#skip')}}
+    needs: [simple_testing_pipeline]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: cd frontend && npm install
       - name: Build
         run: npm run build:ui
       - name: Clean up
