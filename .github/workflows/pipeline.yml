@@ -23,9 +23,24 @@ jobs:
         run: npm run lint
       - name: Frontend test
         run: cd frontend && npm run test
-  deploy_to_render:
+  tag_release:
     if: ${{ github.event_name == 'push'  && !contains(join(toJson(github.event.commits.*.message)), '#skip')}}
     needs: [simple_testing_pipeline]
+    runs-on: ubuntu-20.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.67.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          DEFAULT_BRANCH: master
+          DEFAULT_BUMP: patch
+  deploy_to_render:
+    needs: [tag_release]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
