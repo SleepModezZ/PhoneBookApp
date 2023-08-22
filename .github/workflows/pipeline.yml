@@ -74,6 +74,6 @@ jobs:
         with:
           severity: info
           color: '#00ff00'
-          description: to https://phonebook-jml1.onrender.com by ${{ github.event.push.user.login }}
+          description: to https://phonebook-jml1.onrender.com by ${{ github.actor }}
           text: A new version of PhoneBookApp deployed
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
