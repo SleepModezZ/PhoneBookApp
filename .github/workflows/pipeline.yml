@@ -68,3 +68,12 @@ jobs:
           api_key: ${{ secrets.RENDER_API_KEY }} # required
           clear_cache: false # Clear build cache. Optional
           wait_deploy: false # Wait until the deploy status is successful. Warning! Free Render services can take +5 minutes to be fully deployed. Optional
+      - name: Deployment Successful
+        uses: rjstone/discord-webhook-notify@v1
+        if: success()
+        with:
+          severity: info
+          color: '#00ff00'
+          description: to https://phonebook-jml1.onrender.com by ${{ github.event.pull_request.user.login }}
+          text: A new version of PhoneBookApp deployed
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
