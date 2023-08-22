@@ -3,6 +3,6 @@ import App from './App';
 
 test('renders page header', () => {
   render(<App />);
-  const linkElement = screen.getByText(/Phonebook/i);
+  const linkElement = screen.getByText(/Phonebok/i);
   expect(linkElement).toBeInTheDocument();
 });
