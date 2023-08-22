@@ -1,0 +1,23 @@
+name: Periodic health check
+
+on:
+  schedule:
+    - cron: '0 11 * * *'
+
+jobs:
+  test_schedule:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the deployed service URL
+        uses: jtalk/url-health-check-action@f3f7bd79e4a64218eea7caad72796a1443896aeb
+        with:
+          # Check the following URLs one by one sequentially
+          url: https://phonebook-jml1.onrender.com/health
+          # Follow redirects, or just report success on 3xx status codes
+          follow-redirect: false # Optional, defaults to "false"
+          # Fail this action after this many failed attempts
+          max-attempts: 4 # Optional, defaults to 1
+          # Delay between retries
+          retry-delay: 60s # Optional, only applicable to max-attempts > 1
+          # Retry all errors, including 404. This option might trigger curl upgrade.
+          retry-all: false # Optional, defaults to "false"
