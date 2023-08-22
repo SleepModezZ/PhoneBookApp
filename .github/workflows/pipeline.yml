@@ -23,6 +23,15 @@ jobs:
         run: npm run lint
       - name: Frontend test
         run: cd frontend && npm run test
+      - name: Build Failure
+        uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
+        if: failure()
+        with:
+          severity: error
+          color: '#ff0000'
+          description: "commit to https://github.com/SleepModezZ/PhoneBookApp/commit/${{ github.sha }} by ${{ github.event.pull_request.user.login }} broke the build :("
+          text: Build failed
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
   tag_release:
     if: ${{ github.event_name == 'push'  && !contains(join(toJson(github.event.commits.*.message)), '#skip')}}
     needs: [simple_testing_pipeline]
@@ -53,9 +62,18 @@ jobs:
         run: npm run build:ui
       - name: Clean up
         run: rm -r ./frontend/build && rm -r ./frontend/node_modules
-      - uses: JorgeLNJunior/render-deploy@v1.3.2
+      - uses: JorgeLNJunior/render-deploy@354f5b345ec066cc9b78e387040cf5b3478578b5
         with:
           service_id: ${{ secrets.RENDER_SERVICE_ID }} # required
           api_key: ${{ secrets.RENDER_API_KEY }} # required
           clear_cache: false # Clear build cache. Optional
           wait_deploy: false # Wait until the deploy status is successful. Warning! Free Render services can take +5 minutes to be fully deployed. Optional
+      - name: Deployment Successful
+        uses: rjstone/discord-webhook-notify@v1
+        if: success()
+        with:
+          severity: info
+          color: '#00ff00'
+          description: to https://phonebook-jml1.onrender.com by ${{ github.event.pull_request.user.login }}
+          text: A new version of PhoneBookApp deployed
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
