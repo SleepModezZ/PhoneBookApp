@@ -61,7 +61,7 @@ jobs:
       - name: Build
         run: npm run build:ui
       - name: Clean up
-        run: rm -r ./frontend/build && rm -r ./frontend/node_modules
+        run: rm -r ./frontend/build && rm -r ./frontend
       - uses: JorgeLNJunior/render-deploy@354f5b345ec066cc9b78e387040cf5b3478578b5
         with:
           service_id: ${{ secrets.RENDER_SERVICE_ID }} # required
